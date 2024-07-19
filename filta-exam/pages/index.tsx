@@ -1,11 +1,36 @@
 import Head from "next/head";
-import Image from "next/image";
+import { useState } from "react";
 import { Inter } from "next/font/google";
 import styles from "../styles/main.module.scss";
-
+import datas from "../data.json";
 const inter = Inter({ subsets: ["latin"] });
+import {
+  Tabs,
+  Tab,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+} from "@mui/material";
+import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 
 export default function Home() {
+  const [selectedContent, setSelectedContent] = useState<number>(0);
+  const [expanded, setExpanded] = useState<number | boolean>(0);
+
+  const handleTabChange = (
+    event: React.SyntheticEvent,
+    newVal: number
+  ): void => {
+    setSelectedContent(newVal);
+  };
+
+  const handleChange =
+    (panel: number) => (event: React.SyntheticEvent, isExpanded: boolean) => {
+      setExpanded(isExpanded ? panel : false);
+    };
+
   return (
     <>
       <Head>
@@ -74,6 +99,54 @@ export default function Home() {
                 </p>
                 <button className={styles.card__button}>Read More</button>
               </div>
+            </div>
+          </div>
+        </section>
+        <section className={`${styles.section}`}>
+          <div className={`${styles.container}`}>
+            <div className={`${styles.tabs}`}>
+              <Tabs
+                value={selectedContent}
+                onChange={handleTabChange}
+                variant="scrollable"
+                scrollButtons="auto"
+              >
+                {datas.map((data, i) => {
+                  return (
+                    <Tab
+                      key={i}
+                      value={i}
+                      label={data.title}
+                    />
+                  );
+                })}
+              </Tabs>
+              <div className={`${styles.tabs__content}`}>
+                {/* {react markdown is used to parse inner html contents without using dangerouslySetInnerHTML} */}
+                <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                  {datas[`${selectedContent}`].content}
+                </ReactMarkdown>
+              </div>
+            </div>
+            <div className={styles.accordion}>
+              {datas.map((data, index) => (
+                <Accordion
+                  expanded={expanded === index}
+                  onChange={handleChange(index)}
+                  key={index}
+                >
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon fontSize="large" />}
+                  >
+                    <h3>{data.title}</h3>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+                      {data.content}
+                    </ReactMarkdown>
+                  </AccordionDetails>
+                </Accordion>
+              ))}
             </div>
           </div>
         </section>
