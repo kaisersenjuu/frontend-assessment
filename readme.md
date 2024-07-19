@@ -6,6 +6,16 @@
 4. npm run dev
 5. Open on browser http://localhost:3000
 
+## - Explain why the result of `('b' + 'a' + + 'a' + 'a').toLowerCase()` is `banana`.
+
+# Answer -
+
+1. b + a is straight up string concatenation it combines two strings forming 'ba'
+2. the + 'a' acts as a unary operator, converting 'a' to a number, but since 'a' isnt a numerical character, the conversion fails resulting in "Not A Number" or "NaN" in javascript
+3. 'ba' + 'NaN' the string concatenation continues and combining two strings into 'baNaN'
+4. adding up the final + 'a' another concatenation the result is 'baNaNa'
+5. toLowerCase() function converts the entire string into lowercase characters resulting into 'banana'
+
 ## Introduction
 
 Thanks for taking the time to complete this frontend technical assessment. We will be focusing on software quality (scalability, readability, maintainability, etc.) and your eye for detail. You may include any libraries, but Vue.js is preferred and jQuery is not recommended. Along with following best practices, bonus points for following our [coding guidelines](https://github.com/mindarc/frontend-assessment/wiki/Coding-guidelines).
